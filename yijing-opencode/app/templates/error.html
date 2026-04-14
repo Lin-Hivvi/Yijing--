@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }} - 易镜</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .error-container {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .error-icon {
+            font-size: 80px;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+        
+        .error-title {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        
+        .error-message {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .error-code {
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: inline-block;
+            font-family: monospace;
+            color: #e74c3c;
+            margin-bottom: 30px;
+        }
+        
+        .action-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .action-link {
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #3498db;
+            border: 2px solid #3498db;
+        }
+        
+        .action-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 600px) {
+            .error-container {
+                padding: 30px 20px;
+            }
+            
+            .error-title {
+                font-size: 2em;
+            }
+            
+            .action-links {
+                flex-direction: column;
+            }
+            
+            .action-link {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">
+            {% if error_code == 404 %}
+            <i class="fas fa-map-signs"></i>
+            {% elif error_code == 500 %}
+            <i class="fas fa-tools"></i>
+            {% else %}
+            <i class="fas fa-exclamation-triangle"></i>
+            {% endif %}
+        </div>
+        
+        <h1 class="error-title">{{ page_title }}</h1>
+        
+        <p class="error-message">
+            {{ error_message }}
+        </p>
+        
+        <div class="error-code">
+            {% if error_code %}
+            错误代码: {{ error_code }}
+            {% endif %}
+        </div>
+        
+        <div class="action-links">
+            <a href="{{ url_for('index') }}" class="action-link btn-primary">
+                <i class="fas fa-home"></i> 返回首页
+            </a>
+            <a href="{{ url_for('search') }}" class="action-link btn-secondary">
+                <i class="fas fa-book"></i> 浏览卦象
+            </a>
+            <a href="javascript:history.back()" class="action-link btn-secondary">
+                <i class="fas fa-arrow-left"></i> 返回上一页
+            </a>
+        </div>
+        
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; color: #95a5a6; font-size: 0.9em;">
+            <p>易镜 · 模拟周易筮占系统</p>
+            <p>请记住：心念动处，卦象已成；吉凶悔吝，皆由心生。</p>
+        </div>
+    </div>
+    
+    <script>
+        // 返回首页的倒计时（可选功能）
+        let countdown = 10;
+        const countdownElement = document.createElement('div');
+        countdownElement.className = 'countdown';
+        countdownElement.style.marginTop = '20px';
+        countdownElement.style.color = '#7f8c8d';
+        
+        document.querySelector('.error-container').appendChild(countdownElement);
+        
+        const timer = setInterval(() => {
+            countdown--;
+            countdownElement.innerHTML = `<i class="fas fa-clock"></i> ${countdown}秒后自动返回首页`;
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+                window.location.href = "{{ url_for('index') }}";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

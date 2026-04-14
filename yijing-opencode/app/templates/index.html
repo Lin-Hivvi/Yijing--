@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* 内联样式，确保即使CSS文件未加载也能正常显示 */
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 3em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .taiji-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+        
+        .taiji-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(to right, #000 50%, #fff 50%);
+            position: relative;
+            animation: rotate 10s linear infinite;
+        }
+        
+        .taiji-circle::before,
+        .taiji-circle::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+        }
+        
+        .taiji-circle::before {
+            width: 100px;
+            height: 100px;
+            background: white;
+            top: 50px;
+            left: 0;
+            box-shadow: inset 0 0 0 10px black;
+        }
+        
+        .taiji-circle::after {
+            width: 100px;
+            height: 100px;
+            background: black;
+            top: 50px;
+            right: 0;
+            box-shadow: inset 0 0 0 10px white;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .divination-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.5em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .divination-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .divination-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .description {
+            color: #666;
+            line-height: 1.6;
+            margin: 30px 0;
+            font-size: 1.1em;
+        }
+        
+        .nav-links {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: #3498db;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 2px solid #3498db;
+            border-radius: 25px;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            background: #3498db;
+            color: white;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .divination-btn {
+                padding: 15px 30px;
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">🪞</div>
+            <h1>易镜 · 模拟周易筮占</h1>
+            <div class="subtitle">观照内心 · 启迪智慧 · 非为宿命</div>
+        </header>
+        
+        <main class="main-content">
+            <div class="taiji-container">
+                <div class="taiji-circle"></div>
+            </div>
+            
+            <p class="description">
+                易镜是一款基于《周易》六十四卦的开源占卜模拟器。<br>
+                我们无意于宣扬迷信，而是旨在提供一种心理学与哲学上的自省工具。<br>
+                请记住：心念动处，卦象已成；吉凶悔吝，皆由心生。
+            </p>
+            
+            <form id="divination-form" action="{{ url_for('divinate') }}" method="POST">
+                <button type="submit" class="divination-btn">
+                    <i class="fas fa-yin-yang"></i> 诚心起卦
+                </button>
+            </form>
+            
+            <div class="observer-note" style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #3498db;">
+                <h3 style="margin-top: 0; color: #2c3e50;">量子易理提示</h3>
+                <p style="margin-bottom: 0;">
+                    根据现代物理学中的「观测者效应」，系统在为您生成卦象的瞬间，已干预了原本叠加态的「可能性云」。<br>
+                    此卦象是您当前心念与算法随机性共同作用下的「坍缩结果」。
+                </p>
+                <p style="margin: 10px 0; font-weight: bold; color: #e74c3c;">
+                    《易》为君子谋，不为小人谋。请将此视为一面镜子，观照内心，而非机械地预测未来。善易者不卜。
+                </p>
+            </div>
+        </main>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('search') }}" class="nav-link">
+                <i class="fas fa-search"></i> 卦象检索
+            </a>
+            <a href="https://github.com/your-repo/yijing-opencode" class="nav-link" target="_blank">
+                <i class="fab fa-github"></i> 项目源码
+            </a>
+            <a href="{{ url_for('health') }}" class="nav-link">
+                <i class="fas fa-heartbeat"></i> 服务状态
+            </a>
+        </div>
+        
+        <footer>
+            <p>本工具生成的卦象及卦辞解释基于随机算法生成，仅供娱乐与学习传统文化之用。</p>
+            <p>人生重大决策，请务必遵循科学理性与法律法规。</p>
+            <p>易镜 © 2025 · 基于观测者效应的易经模拟筮占系统</p>
+        </footer>
+    </div>
+    
+    <script>
+        // 添加一些简单的交互效果
+        document.getElementById('divination-form').addEventListener('submit', function(e) {
+            const btn = this.querySelector('.divination-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在起卦...';
+            btn.disabled = true;
+            
+            // 添加加载动画
+            document.querySelector('.taiji-circle').style.animationDuration = '1s';
+            
+            // 允许表单正常提交
+        });
+        
+        // 页面加载完成后的效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const taiji = document.querySelector('.taiji-circle');
+            setTimeout(() => {
+                taiji.style.animationDuration = '10s';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# 易镜项目Python依赖
+# 生产环境依赖
+
+# Web框架
+Flask==2.3.3
+gunicorn==21.2.0
+
+# 数据处理
+python-dotenv==1.0.0
+
+# 开发工具（可选）
+# flask-cors==4.0.0
+# flask-limiter==3.5.0
+
+# 可选：如果需要API文档
+# flask-restx==1.2.0
+
+# 注意：项目使用Python 3.11

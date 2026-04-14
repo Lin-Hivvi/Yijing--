@@ -1,0 +1,55 @@
+# 易镜 · 模拟周易筮占系统
+# Docker Compose配置
+
+version: '3.8'
+
+services:
+  yijing-app:
+    build: .
+    container_name: yijing-mirror
+    restart: unless-stopped
+    ports:
+      - "5080:5000"
+    environment:
+      - FLASK_ENV=production
+      - TZ=Asia/Shanghai
+    volumes:
+      # 挂载数据目录，方便更新易经文本
+      - ./data:/app/data:ro
+      # 挂载实例数据，持久化解析后的JSON
+      - ./instance:/app/instance
+      # 挂载日志目录
+      - ./logs:/app/logs
+    networks:
+      - yijing-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  yijing-network:
+    driver: bridge
+
+# 如果需要数据库支持，可在此添加数据库服务
+# services:
+#   db:
+#     image: postgres:15
+#     environment:
+#       POSTGRES_DB: yijing
+#       POSTGRES_USER: yijing_user
+#       POSTGRES_PASSWORD: yijing_password
+#     volumes:
+#       - postgres_data:/var/lib/postgresql/data
+#     networks:
+#       - yijing-network
+
+# volumes:
+#   postgres_data:
